@@ -1,6 +1,7 @@
 ---
 - name: Study_Meeting_Playbook   # タスク名
-  hosts: study-meeting           # 対象ホスト
+  # hosts: study-meeting
+  hosts: 192.168.33.30           # 対象ホスト
   sudo: yes                      # sudoするか
   roles:                         # 実際のタスクを記述しているディレクトリ
     - httpd

@@ -7,10 +7,11 @@ VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box_url = "https://github.com/2creatives/vagrant-centos/releases/download/v6.5.3/centos65-x86_64-20140116.box"
   config.vm.box = "ansible-study-meeting"
-  config.vm.hostname = "study-meeting"
+  # vagrant-hostsupdaterを入れている場合、有効
+  # config.vm.hostname = "study-meeting"
 
   config.vm.network "forwarded_port", guest: 80, host: 8080
-  config.vm.network "private_network", ip: "192.168.33.10"
+  config.vm.network "private_network", ip: "192.168.33.30"
 
   # Ansibleを使うための設定
   config.vm.provision "ansible" do |ansible|
