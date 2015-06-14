@@ -5,3 +5,8 @@
   sudo: yes                      # sudoするか
   roles:                         # 実際のタスクを記述しているディレクトリ
     - httpd
+  #   - mysql
+  # vars_prompt:
+  #   - name: "dbpassword"
+  #     prompt: "Please enter MySQL user password"
+  #     default: "hoge"

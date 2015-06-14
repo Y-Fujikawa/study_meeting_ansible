@@ -1,0 +1,77 @@
+---
+# 以下のサイトを参考にした
+# http://mosuke5.hateblo.jp/entry/2015/04/15/171127
+- name: Create directory
+  file: path={{ mysql_download_dest_dir }} state=directory
+
+- name: Download rpms
+  get_url: >
+    url={{ mysql_download_base_url }}/{{ item.filename }}
+    dest={{ mysql_download_dest_dir }}/{{ item.filename }}
+    sha256sum={{ item.sha256sum }}
+  with_items: mysql_common_rpms
+
+- name: Install MySQL
+  yum: name="{{ mysql_download_dest_dir }}/{{ item.filename }}" state=present
+  with_items: mysql_common_rpms
+
+- name: Install MySQL-python
+  yum: name=MySQL-python
+
+- name: ensure mysql is running and starts on boot
+  service: name={{ mysql_daemon }} state=started enabled=true
+
+- name: check if .mysql_secret exists
+  shell: test -e /root/.mysql_secret
+  register: mysql_secret_exists
+  ignore_errors: True
+
+- name: get mysql initial password
+  shell: cat /root/.mysql_secret | awk '{print $18}'
+  register: mysql_default_password
+  when: mysql_secret_exists.rc == 0
+
+- name: change mysql root password
+  command: /usr/bin/mysqladmin -u root -p{{ mysql_default_password.stdout }} password "{{ mysql_root_password }}"
+  when: mysql_secret_exists.rc == 0
+
+- name: delete .mysql_secret
+  command: rm /root/.mysql_secret
+  when: mysql_secret_exists.rc == 0
+
+- name: copy .my.cnf file with root password credentials
+  template: src=.my.cnf.j2 dest=/root/.my.cnf owner=root mode=0600
+
+# TODO 何のためにあるか、わからないため後で調査
+# - name: update mysql root password for all root accounts
+#   mysql_user: name=root host=$item
+#   with_items:
+#     - 127.0.0.1
+#     - ::1
+#     - localhost
+
+- name: delete anonymous MySQL server user
+  action: mysql_user user="" state="absent"
+
+- name: remove the MySQL test database
+  action: mysql_db db=test state=absent
+
+- name: create mysql configuration file /usr/my.cnf
+  action: template src=my.cnf.j2 dest=/usr/my.cnf owner=root mode=0600
+  notify: restart mysql
+
+# iptablesがあった場合、設定を追加する
+# - name: insert iptables rule
+#   lineinfile: dest=/etc/sysconfig/iptables state=present regexp="{{ mysql_port }}"
+#               insertafter="^:OUTPUT " line="-A INPUT -p tcp --dport {{ mysql_port }} -j ACCEPT"
+#   notify: restart iptables
+
+- name: Create database
+  mysql_db: db={{ dbname }} state=present encoding=utf8
+
+- name: Create database user
+  mysql_user: >
+    name={{ dbuser }}
+    password="{{ dbpassword }}"
+    priv={{ dbname }}.*:ALL
+    state=present

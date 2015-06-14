@@ -1,0 +1,24 @@
+---
+mysql_daemon: mysql
+
+mysql_download_base_url: http://ftp.jaist.ac.jp/pub/mysql/Downloads/MySQL-5.6
+mysql_download_dest_dir: /usr/local/src
+mysql_ver: "5.6.25-1"
+mysql_common_rpms:
+  - filename: MySQL-shared-compat-{{ mysql_ver }}.el6.x86_64.rpm
+    sha256sum: 91813307280822aee6deeb93d9e5517656c1195209633d0562a39701ade9d863
+  - filename: MySQL-server-{{ mysql_ver }}.el6.x86_64.rpm
+    sha256sum: 4c5b846bf1d3210b32420eeff733b09eee1f890054639499def457ba2ea245f2
+  - filename: MySQL-client-{{ mysql_ver }}.el6.x86_64.rpm
+    sha256sum: 2ef34c4e3a96cb7c8ece3bc98bf1cdf5596c45f64a0e27feaa30fde620d14bd8
+  - filename: MySQL-devel-{{ mysql_ver }}.el6.x86_64.rpm
+    sha256sum: b96dfab45f5f0a752e67010c03c7298ad887ed600c8ab3370b838957b35f610f
+  - filename: MySQL-shared-{{ mysql_ver }}.el6.x86_64.rpm
+    sha256sum: f385849c7967636e32693eb92388c3681b0acd4e10d9874987e6769cbee3dca2
+
+mysql_port: 3306
+mysql_root_password: root
+
+# use database name, dbuser
+dbname: hoge
+dbuser: hoge

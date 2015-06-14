@@ -15,12 +15,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # vagrant upのとき実行されてしまうため、最初はコメントアウト
   # # Ansibleを使うための設定
-  #config.vm.provision "ansible" do |ansible|
-  #  # 指定環境に適用させたい設定が書かれているファイルを指定
-  #  ansible.playbook = "playbook.yml"
-  #  # 設定を適用させるホストが書かれているファイルを指定
-  #  ansible.inventory_path = "hosts"
-  #  ansible.limit = "all"
-  #end
+  # config.vm.provision "ansible" do |ansible|
+  #   # 指定環境に適用させたい設定が書かれているファイルを指定
+  #   ansible.playbook = "playbook.yml"
+  #   # 設定を適用させるホストが書かれているファイルを指定
+  #   ansible.inventory_path = "hosts"
+  #   ansible.limit = "all"
+  # end
 
 end
