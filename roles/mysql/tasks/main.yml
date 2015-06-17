@@ -58,6 +58,7 @@
 
 - name: Create mysql configuration file /usr/my.cnf
   action: template src=my.cnf.j2 dest=/usr/my.cnf owner=root mode=0600
+  # TODO 必ず1回目が失敗するが、2回目は問題ない。どういうことだろう？
   notify: restart mysql
 
 # iptablesがあった場合、設定を追加する
